@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo</title>
+</head>
+<style>
+    body {
+        background: #1e1a20;
+    }
+
+    .container1 {
+        display: flex;
+        justify-content: center;
+        margin-top: 90px;
+    }
+
+    .container {
+        background: #36323c;
+        display: inline-block;
+        border-radius: 6px;
+        padding: 2.4rem;
+    }
+
+    .container .todo_list {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .container .todo_list1 {
+        margin-top: 9px;
+    }
+
+    .container .todo_list1 .todo_list h3 {
+        color: #ffff;
+    }
+
+    .container .add_todo input {
+        padding: 0.4rem;
+        width: 13.4rem;
+        outline: none;
+        border: none;
+    }
+
+    .btn {
+        padding: 6px 12px 6px 12px;
+        border: none;
+        cursor: pointer;
+        background: #556ff7;
+        color: white;
+    }
+
+    .btn2 {
+        background: rgb(255, 81, 0);
+    }
+</style>
+
+<body>
+    <div class="container1">
+        <div class="container">
+            <div class="add_todo">
+                <input type="text" id="addtxt" placeholder="add Todo....">
+                <button class="btn" id="btn">Add</button>
+            </div>
+            <div class="todo_list1" id="list1">
+            </div>
+        </div>
+    </div>
+    <script>
+        let btn = document.getElementById("btn");
+        btn.addEventListener('click',function(){
+            let addtxt = document.getElementById("addtxt");
+            let localtodo = localStorage.getItem("todolist");
+            if(localtodo == null){
+                listobj = [];
+            }else{
+                listobj = JSON.parse(localtodo);
+            }
+            listobj.push(addtxt.value);
+            localStorage.setItem("todolist",JSON.stringify(listobj));
+            addtxt.value = "";
+            showtodolist();
+        })   
+        function showtodolist(){
+            let localtodo  = localStorage.getItem("todolist");
+            listobj = JSON.parse(localtodo);
+            let html = "";
+            listobj.forEach((element,index) => {
+                html += `
+                <div class="todo_list">
+                    <h3>${element}</h3>
+                    <div class="btn-con">
+                        <button class="btn" onclick="edittodo(this.id,this.name)" name=${element} id=${index}>Edit</button>
+                        <button class="btn btn2" onclick="deletetodo(this.id)" id=${index}>Delete</button>
+                    </div>
+                </div>
+                `;
+            });
+            let list1 = document.getElementById("list1");
+            list1.innerHTML = html;
+        }
+        function deletetodo(index){
+            let localtodo  = localStorage.getItem("todolist");
+            listobj = JSON.parse(localtodo);
+            listobj.splice(index,1);
+            localStorage.setItem("todolist",JSON.stringify(listobj));
+            showtodolist();
+        }
+        function edittodo(index,element){
+            let localtodo  = localStorage.getItem("todolist");
+            listobj = JSON.parse(localtodo);
+            let addtxt = document.getElementById("addtxt");
+            addtxt.value = element;
+            listobj.splice(index,1);
+            localStorage.setItem("todolist",JSON.stringify(listobj));
+            showtodolist();
+        }
+    </script>
+</body>
+
+</html>
